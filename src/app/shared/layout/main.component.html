@@ -1,0 +1,13 @@
+<div [ngClass]="getClass()">
+  <nav class="navbar navbar-default navbar-top" role="navigation" [ngClass]="{'nav_factory': isFactoryInMonitoring}">
+    <sd-navbar></sd-navbar>
+  </nav>
+  <div id="page-wrapper" class="gray-bg dashbard-1" [ngClass]="{'bg_factory': isFactoryInMonitoring, 'iframe_wrap': isOnSupportPage}">
+    <router-outlet></router-outlet>
+  </div>
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted"><strong>Copyright</strong> Sample Company © 2018</p>
+    </div>
+  </footer>
+</div>

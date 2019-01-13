@@ -1,0 +1,107 @@
+<!--Content -->
+<!--<div class="wrapper wrapper-content animated fadeInRight">-->
+<div class="wrapper wrapper-content">
+  <div class="user_warp">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins view_type"> <!-- view type -->
+          <!-- Tip -->
+          <div class="tip_wrap">
+            <p class="tit"><span>TIP</span> 코인별 채굴난이도가 궁금하세요?</p>
+            <button type="button" class="btn_open" [ngClass]="{'on':toggleOn['Tip'] === 'on'}"
+                    (click)="toggleMenu('Tip', $event)"> <span class="hide">Tip 열기/닫기</span>
+            </button>
+            <ul [@toggleHeight]="toggleOn.Tip">
+              <li><a target="_blank" href="http://bit.ly/2s1pZNY">이더리움</a></li>
+              <li><a target="_blank" href="http://bit.ly/2mdv3tg">이더리움클래식</a></li>
+            </ul>
+          </div>
+          <div class="ibox-title">
+            <h5>모니터링</h5>
+            <button type="button" class="btn_moni" (click)="toggleMenu('Select', $event)"></button>
+            <div [@toggleHeight]="toggleOn.Select" class="view_select">
+              <span class="rdo">
+                <div [ngClass]="{'checked': selectedRadio === 'error'}" (click)="selectRadio('error')"
+                     class="iradio_square-black" style="position: relative;">
+                  <input type="radio" checked="" class="i-checks" id="rdo01_01"
+                         style="position: absolute; opacity: 0;">
+                  <ins class="iCheck-helper radio_button"></ins>
+                </div>
+                <label for="rdo01_01">이상 채굴기만 보기</label>
+              </span>
+              <span class="rdo">
+                  <div [ngClass]="{'checked': selectedRadio === 'all'}" class="iradio_square-black" (click)="selectRadio('all')"
+                       style="position: relative;">
+                    <input id="rdo02" type="radio" class="i-checks" style="position: absolute; opacity: 0;">
+                    <ins class="iCheck-helper radio_button"></ins>
+                  </div>
+                  <label for="rdo02">전체보기</label>
+                </span>
+              <span class="rdo">
+                  <div [ngClass]="{'checked': selectedRadio === 'factory'}" class="dimmed_pointer iradio_square-black"
+                       style="position: relative;">
+                    <input id="rdo03" type="radio" class="i-checks" style="position: absolute; opacity: 0;">
+                    <ins class="iCheck-helper radio_button"></ins>
+                  </div>
+                  <label for="rdo03">공장</label>
+                  <select [ngModel]="selectedFactoryID" #selectedFactory (change)="selectFactory(selectedFactory.value)" class="select form-control m-b" style="width:130px">
+                    <option [value]="-1">선택해주세요</option>
+                    <!--<option [value]="0">전체보기</option>-->
+                    <option *ngFor="let factory of factoryList" [value]="factory.id">{{ factory.name }}</option>
+                  </select>
+                </span>
+            </div>
+          </div>
+          <div *ngIf ="setDefaultPage === true; then PC_LIST_EMPTY else PC_LIST_EXIST"></div>
+          <ng-template #PC_LIST_EXIST>
+            <div class="ibox-content">
+              <div class="top_info bt">
+                <p *ngIf="selectedRadio === 'error'">
+                  현재 열람하고 있는 PC는 <span class="top_control_text">점검이 필요한 PC</span>입니다.
+                </p>
+                <p *ngIf="selectedRadio === 'all'">
+                  현재 관리 중인 PC는 <span class="top_control_text">총 {{ cntPCList | number }}대</span> 입니다.
+                </p>
+                <p *ngIf="selectedRadio === 'factory'">
+                  현재 열람하고 있는 PC는 <span class="top_control_text">{{ selectedFactoryID <= 0 ? "" : '[' + getName(selectedFactoryID, factoryList) + ']' }} 공장</span>에서 운영되고 있는 PC입니다.
+                </p>
+                <div class="btn_wrap">
+                  <button type="button" class="btn_re" (click)="refresh()"></button>
+                  <button type="button" class="btn_pc_reboot on" (click)="rebootPCAll()"></button>
+                  <button type="button" class="btn_iot_reboot" (click)="rebootPlugAll()"></button>
+                </div>
+              </div>
+              <mobile-pc-list [minerList]="minerList" [pcList]="pcList" [minerStatMap]="minerStatMap"
+                              [pcIdNMinersMap]="pcIdNMinersMap" [minerPlugMap]="minerPlugMap" [factoryList]="factoryList"
+                              [pcRebootCountMap]="pcRebootCountMap" (onReload)="refresh()"></mobile-pc-list>
+              <div class="container" *ngIf="selectedRadio!='error' && pager.pages && pager.pages.length > 1">
+                <div class="text-center">
+                  <!-- pager -->
+                  <ul class="pagination">
+                    <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.pageNum === page}">
+                      <a (click)="getPage(page)">{{page}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template #PC_LIST_EMPTY>
+            <div class="ibox-content">
+              <div class="empty_pc_list">
+                <img src="/assets/img/content/nopc.png" alt="image">
+                <div *ngIf="emptyErrorList === true; then ERROR_LIST_EMPTY else EMPTY_PC_LIST"></div>
+                <ng-template #ERROR_LIST_EMPTY>
+                  <div>이상작동하는 채굴기가 없습니다.</div>
+                </ng-template>
+                <ng-template #EMPTY_PC_LIST>
+                  <div>선택하신 계정에 채굴기가 없습니다.</div>
+                </ng-template>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

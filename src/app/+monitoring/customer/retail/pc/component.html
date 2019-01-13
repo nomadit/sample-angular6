@@ -1,0 +1,84 @@
+<div class="wrapper-content">
+  <div class="admin_wrap">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-content">
+            <div class="content-header">
+              <app-monitoring-header></app-monitoring-header>
+              <div class="top_line"></div>
+              <div *ngIf="page.totalCount === 0; then PC_LIST_EMPTY else PC_LIST_EXIST"></div>
+              <ng-template #PC_LIST_EXIST>
+                <customer-balance [userID]="currentUserID"></customer-balance>
+                <div class="content-action-layer customer" fixedHeader>
+                  <div class="top_control_wrapper">
+                    <div class="top_control button_wrapper">
+                      <button class="btn btn-mine" type="button" [ngClass]="{'dimmed': selectedList.length === 0}"
+                              (click)="changeAllWallet()">지갑 변경
+                      </button>
+                      <button class="btn btn-mine" type="button" [ngClass]="{'dimmed': selectedList.length === 0}"
+                              (click)="changeAllCoin()">코인 변경
+                      </button>
+                      <button class="btn btn-mine btn-re" type="button" (click)="refresh()"></button>
+                      <p class="jpre_txt">
+                        현재 관리 중인 PC는 <span class="top_control_text">총 {{ page.totalCount | number }}대</span> 입니다.
+                      </p>
+                    </div>
+                    <table class="table">
+                      <colgroup>
+                        <col style="width: 45px;">
+                        <col style="width: 170px;">
+                        <col style="width: 110px;">
+                        <col style="width: 110px;">
+                        <col style="width: 110px;">
+                        <col style="width: 110px;">
+                        <col style="width: 373px;">
+                      </colgroup>
+                      <thead>
+                      <tr>
+                        <th class="al_center">
+                          <div class="icheckbox_square-black" style="position: relative;"
+                               (click)="updateSelectedAll()" [ngClass]="{'checked': isSelectedAll}">
+                            <input class="i-checks" name="allCheck" style="position: absolute; opacity: 0;"
+                                   type="checkbox">
+                            <ins class="iCheck-helper cust-checkbox"></ins>
+                          </div>
+                        </th>
+                        <th>채굴기명</th>
+                        <th>위치</th>
+                        <th>코인</th>
+                        <th>비율</th>
+                        <th>
+                          채굴파워
+                          <ng-template #tooltipTxtExplainMiningPower>GPU별 채굴파워를 확인하시려면 <br>채굴기명을 클릭해주세요.</ng-template>
+                          <a class="icon_explain_mining_power" data-toggle="tooltip" placement="right"
+                             [tooltip]="tooltipTxtExplainMiningPower"></a>
+                        </th>
+                        <th>현재상태</th>
+                      </tr>
+                      </thead>
+                    </table>
+                  </div>
+                </div>
+                <div class="content-body">
+                  <pc-customer-list [minerList]="page.list"
+                                    [selectedList]="selectedList"
+                                    [retailList]="[]"
+                                    [isSelectedAll]="isSelectedAll"
+                                    (toggleSelectedAll)="toggleSelectedAll()"></pc-customer-list>
+                  <m-pagination [page]="page" (getPage)="getPage($event)"></m-pagination>
+                </div>
+              </ng-template>
+              <ng-template #PC_LIST_EMPTY>
+                <div class="empty_pc_list">
+                  <img src="/assets/img/content/nopc.png" alt="image">
+                  <div>선택하신 계정에 채굴기가 없습니다.</div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

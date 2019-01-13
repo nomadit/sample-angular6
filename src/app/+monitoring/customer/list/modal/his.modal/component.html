@@ -1,0 +1,58 @@
+<div class="memo">
+  <h1>[{{ factoryName }}] {{ hostname }}</h1>
+  <div class="cont_wrap modal-body">
+    <!-- Tab -->
+    <div class="tabs-container">
+      <ul class="nav nav-tabs">
+        <li [ngClass]="{'active': type=='SYSTEM'}"><a (click)="changeType('USER')">복구이력</a></li>
+        <!--<li [ngClass]="{'active': type=='USER'}"><a (click)="changeType('USER')">관리자 메모</a></li>-->
+      </ul>
+
+      <div class="tab-content">
+        <div class="tab-pane active">
+          <div class="panel-body">
+            <p *ngIf="type == 'SYSTEM'" class="t_info">최근 30일간 총 {{ systemHisCnt }}회의 복구이력이 존재합니다.</p>
+            <!--<div *ngIf="type == 'USER' && (role == 'ADMIN')" class="input-group">-->
+              <!--<input type="text" placeholder="장비 교체 등 굥유가 필요한 내용을 입력해주세요" class="form-control" [(ngModel)]="memo"-->
+                     <!--(keyup.enter)="writeMemo()">-->
+              <!--<span class="input-group-btn"> <button type="button" class="btn btn-primary" (click)="writeMemo()">입력</button> </span>-->
+            <!--</div>-->
+            <!-- Table -->
+            <div class="ibox-content">
+              <table class="table">
+                <thead>
+                <tr *ngIf="type == 'SYSTEM'">
+                  <th class="date">날짜</th>
+                  <!--<th class="processor">처리자</th>-->
+                  <th>복구내용</th>
+                </tr>
+                <!--<tr *ngIf="type == 'USER'">-->
+                  <!--<th class="date">날짜</th>-->
+                  <!--<th class="processer">작성자</th>-->
+                  <!--<th>내용</th>-->
+                <!--</tr>-->
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of viewList">
+                  <td>{{ item.created_at | date: 'yyyy-MM-dd HH:mm:ss' : '+0900' }}</td>
+                  <!--<td>{{ getUserName(item.user_id) }}</td>-->
+                  <td *ngIf="type == 'SYSTEM'">{{ item.title }}</td>
+                  <!--<td *ngIf="type == 'USER'">{{ item.description }}</td>-->
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- //Table -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- //Tab -->
+
+    <div class="btn_wrap modal-footer">
+      <button type="button" class="btn btn-dark btn_closed" (click)="close()">닫기</button>
+    </div>
+  </div>
+</div>
+

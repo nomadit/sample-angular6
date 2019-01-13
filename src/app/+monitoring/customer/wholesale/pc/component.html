@@ -1,0 +1,134 @@
+<div class="wrapper-content">
+  <div class="admin_wrap">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-content">
+            <div class="content-header">
+              <app-monitoring-header></app-monitoring-header>
+              <div class="top_line"></div>
+              <div class="top_select">
+                <span class="rdo">
+                  <select [ngModel]="pageQuery.type" #selectedType (change)="selectType(selectedType.value)"
+                          class="select form-control m-b">
+                    <option [value]="'all'">전체</option>
+                    <option [value]="'error'">이상 채굴기만 보기</option>
+                    <option [value]="'self'">직영({{ summary.wholesaleCount }})</option>
+                    <option [value]="'retail'">위탁 채굴기</option>
+                  </select>
+                </span>
+                <span class="rdo" *ngIf="pageQuery.type === 'retail'">
+                  <select [ngModel]="pageQuery.retailID" #selectedRetail (change)="selectRetail(selectedRetail.value)"
+                          class="select form-control m-b" style="width:130px">
+                    <option [value]="0">선택하세요</option>
+                    <option *ngFor="let retail of retailList" [value]="retail.id">{{ retail.login_id }}</option>
+                  </select>
+                </span>
+              </div>
+              <div class="top_line"></div>
+            </div>
+            <div *ngIf="page.totalCount === 0; then PC_LIST_EMPTY else PC_LIST_EXIST"></div>
+            <ng-template #PC_LIST_EXIST>
+              <customer-balance *ngIf="(pageQuery.type === 'self' || (pageQuery.type === 'retail' && pageQuery.retailID > 0))" [userID]="currentUserID"></customer-balance>
+              <div class="content-action-layer customer" fixedHeader>
+                <div class="top_control_wrapper">
+                  <div class="top_control button_wrapper">
+                    <div *ngIf="isAdmin === true && pageQuery.type === 'self'; then EXCEPTION_CASE_WHEN_WHOLESALE else NORMAL_CASE"></div>
+                    <ng-template #EXCEPTION_CASE_WHEN_WHOLESALE>
+                      <p class="jpre_txt exception_case">
+                        홀세일러의 지갑과 코인은 어드민 계정으로 변경이 불가합니다. 개발팀에 요청해주세요.
+                      </p>
+                    </ng-template>
+                    <ng-template #NORMAL_CASE>
+                      <button class="btn btn-mine" type="button"
+                              [ngClass]="{'dimmed': pageQuery.type === 'error' || pageQuery.type === 'all' ||
+                            (pageQuery.type === 'retail' && pageQuery.retailID === 0)}"
+                              (click)="changeAllWallet()">지갑 변경
+                      </button>
+                      <button class="btn btn-mine" type="button"
+                              [ngClass]="{'dimmed': pageQuery.type === 'error' || pageQuery.type === 'all' ||
+                            (pageQuery.type === 'retail' && pageQuery.retailID === 0)}"
+                              (click)="changeAllCoin()">코인 변경
+                      </button>
+                      <button class="btn btn-mine btn-re" type="button" (click)="refresh()"></button>
+                      <p class="jpre_txt" *ngIf="pageQuery.type === 'all'">
+                        관리중인 채굴기는 <span class="top_control_text">총 {{ page.totalCount | number }}대</span> 입니다.
+
+                      </p>
+                      <p class="jpre_txt" *ngIf="pageQuery.type === 'error'">
+                        점검이 필요한 채굴기가 <span class="top_control_text">{{ page.totalCount | number }}대</span> 있습니다.
+                      </p>
+                      <p class="jpre_txt" *ngIf="pageQuery.type === 'retail'">
+                        {{ pageQuery.retailID == 0 ? "" : getName(pageQuery.retailID, retailList) }}의 채굴기는 <span
+                        class="top_control_text">{{ page.totalCount | number }}대</span>입니다.
+                      </p>
+                      <p class="jpre_txt" *ngIf="pageQuery.type === 'self'">
+                        직접 운영중인 채굴기는 <span class="top_control_text">{{ page.totalCount | number }}대</span>입니다.
+                      </p>
+                    </ng-template>
+                  </div>
+                  <table class="table">
+                    <colgroup>
+                      <col style="width: 45px;">
+                      <col style="width: 170px;">
+                      <col style="width: 170px;">
+                      <col style="width: 110px;">
+                      <col style="width: 110px;">
+                      <col style="width: 110px;">
+                      <col style="width: 110px;">
+                      <col style="width: 373px;">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                      <th class="al_center">
+                        <div class="icheckbox_square-black" style="position: relative;"
+                             (click)="updateSelectedAll()" [ngClass]="{'checked': isSelectedAll}">
+                          <input class="i-checks" name="allCheck" style="position: absolute; opacity: 0;"
+                                 type="checkbox">
+                          <ins class="iCheck-helper cust-checkbox"></ins>
+                        </div>
+                      </th>
+                      <th>채굴기명</th>
+                      <th>소유주</th>
+                      <th>위치</th>
+                      <th>코인</th>
+                      <th>비율</th>
+                      <th>
+                        채굴파워
+                        <ng-template #tooltipTxtExplainMiningPower>GPU별 채굴파워를 확인하시려면 <br>채굴기명을 클릭해주세요.</ng-template>
+                        <a class="icon_explain_mining_power" data-toggle="tooltip" placement="right"
+                                 [tooltip]="tooltipTxtExplainMiningPower"></a>
+                      </th>
+                      <th>현재상태</th>
+                    </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+              <div class="content-body">
+                <pc-customer-list [minerList]="page.list"
+                                [selectedList]="selectedList"
+                                [retailList]="retailList"
+                                [isSelectedAll]="isSelectedAll"
+                                (toggleSelectedAll)="toggleSelectedAll()"></pc-customer-list>
+                <m-pagination [page]="page" (getPage)="getPage($event)"></m-pagination>
+              </div>
+            </ng-template>
+            <ng-template #PC_LIST_EMPTY>
+              <div class="empty_pc_list">
+                <img src="/assets/img/content/nopc.png" alt="image">
+                <div *ngIf="pageQuery.type === 'error'; then ERROR_LIST_EMPTY else EMPTY_PC_LIST"></div>
+                <ng-template #ERROR_LIST_EMPTY>
+                  <div>이상작동하는 채굴기가 없습니다.</div>
+                </ng-template>
+                <ng-template #EMPTY_PC_LIST>
+                  <div>선택하신 계정에 채굴기가 없습니다.</div>
+                </ng-template>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,114 @@
+/* Sticky Button Layer */
+.sticky {
+  position: fixed;
+  top: 0;
+  z-index: 2;
+  background-color: #fff;
+  width: 1008px;
+  -moz-box-shadow: 0 18px 26px -12px rgba(0,0,0,0.1);
+　-webkit-box-shadow: 0 18px 26px -12px rgba(0,0,0,0.1);
+  box-shadow: 0 18px 26px -12px rgba(0,0,0,0.1);
+}
+
+.content-body.with_fixed_btn_layer {
+  padding-top: 121px;}
+.btn_top {
+  width: 100%
+}
+
+.admin_wrap .btn_top button:first-child {
+  float: none;
+}
+
+.top_select {
+  background-color: #fafafa;
+}
+
+@media (max-width: 414px) {
+  .top_info .btn_top button {
+    margin-bottom: 10px;
+  }
+
+  .top_info .btn_top {
+    text-align: left;
+  }
+
+  .btn_top .btn:nth-child(2n) {
+    margin-left: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top_info .btn_top button {
+    margin-bottom: 10px;
+  }
+
+  .btn_top .btn:nth-child(2n-1) {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .top_info .btn_top {
+    position: static;
+    margin: 10px 0 0 0;
+    text-align: left;
+  }
+}
+
+
+.radio_button {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  background: rgb(255, 255, 255);
+  border: 0px;
+  opacity: 0;
+}
+
+.cust-checkbox {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  background: rgb(255, 255, 255);
+  border: 0px;
+  opacity: 0;
+}
+
+.cust-inner-table {
+  padding: 0px;
+  border: 0px;
+}
+
+.cust-inner-table > tr {
+  padding: 0px;
+  padding: 0px;
+  border: 0px;
+}
+
+.cust-inner-table > tr > td {
+  padding: 0px;
+  border: 0px;
+}
+
+.management_layer a {
+  text-decoration: underline;
+  color: inherit;
+}
+
+.management_layer :hover {
+  color: #009ccc;
+  font-weight: bold;
+}
+
+table thead tr th {padding: 8px 0;vertical-align: middle}

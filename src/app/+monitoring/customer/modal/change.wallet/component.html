@@ -1,0 +1,79 @@
+<div *ngIf="hasDualCoin; then DUAL_COIN else SINGLE_COIN"></div>
+<ng-template #SINGLE_COIN>
+<div class="layer_pc jly_fac_set">
+  <h1 class="modal-header">지갑 변경하기</h1>
+  <p class="modal-header_jtxt">변경할 지갑을 선택해주세요.<br>
+    지갑 변경 시 동일한 코인의 지갑으로만 변경이 가능합니다.</p>
+  <div class="cont_wrap modal-body">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-content al_left">
+            <form class="form-horizontal" method="get" novalidate="">
+              <select class="select form-control m-b" [(ngModel)]="form.walletID" #selectedWallet
+                      (change)="selectWallet(selectedWallet.value)" name="selectedWalletID">
+                <option [value]="0">지갑을 선택해 주세요</option>
+                <option *ngFor="let wallet of walletList" [value]="wallet.id">{{ wallet.name }}
+                  {{ currentWallets.firstIDSet.has(wallet.id) ? '(현재사용중)' : ''}}</option>
+              </select>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn_wrap modal-footer clear">
+      <div class="jfr">
+        <button class="btn btn-dark" type="button" (click)="confirm()">변경</button>
+        <button class="btn btn_closed" type="button" (click)="close()">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-template>
+<ng-template #DUAL_COIN>
+<div class="layer_pc jly_conin">
+  <h1 class="modal-header">지갑 변경하기</h1>
+  <p class="modal-header_jtxt">변경할 지갑을 선택해주세요.<br>
+    지갑 변경 시 동일한 코인의 지갑으로만 변경이 가능합니다.</p>
+  <div class="cont_wrap modal-body">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-content al_left">
+            <form class="form-horizontal" method="get" novalidate="">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">{{coin.main}} 지갑</label>
+                <div class="col-sm-8 control-content">
+                  <select class="select form-control m-b" [(ngModel)]="form['walletID']" #selectedWallet
+                          (change)="selectWallet(selectedWallet.value)" name="selectedWalletID">
+                    <option [value]="0">지갑을 선택해 주세요</option>
+                    <option *ngFor="let wallet of walletList" [value]="wallet.id">{{ wallet.name }}
+                      {{ currentWallets.firstIDSet.has(wallet.id) ? '(현재사용중)' : ''}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">{{coin.dual}} 지갑</label>
+                <div class="col-sm-8 control-content">
+                  <select class="select form-control m-b" [(ngModel)]="form['dualWalletID']" #selectedDualWallet
+                          (change)="selectDualWallet(selectedDualWallet.value)" name="selectedDualWalletID">
+                    <option [value]="0">지갑을 선택해 주세요</option>
+                    <option *ngFor="let wallet of dualCoinWalletList" [value]="wallet.id">{{ wallet.name }}
+                      {{ currentWallets.secondIDSet.has(wallet.id) ? '(현재사용중)' : ''}}</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn_wrap modal-footer clear">
+      <div class="jfr">
+        <button class="btn btn-dark" type="button" (click)="confirm()">변경</button>
+        <button class="btn btn_closed" type="button" (click)="close()">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-template>

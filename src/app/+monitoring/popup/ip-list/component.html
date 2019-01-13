@@ -1,0 +1,58 @@
+<div class="layer_pc memo all_ip">
+  <h1 class="modal-header">IP 모아보기</h1>
+  <div class="cont_wrap modal-body">
+    <div class="tabs-container">
+      <div class="tab-content">
+        <div class="tab-pane active">
+          <div class="panel-body">
+            <div class="col-lg-12">
+              <div class="ibox float-e-margins">
+                <div class="ibox-content al_left">
+                  <div class="jtbl_area">
+                    <table class="table">
+                      <colgroup>
+                        <col style="width: 150px;">
+                        <col style="width: 150px;">
+                        <col style="width: 158px;">
+                      </colgroup>
+                      <thead>
+                      <tr>
+                        <th>채굴기명</th>
+                        <th>내부 IP</th>
+                        <th>Access IP</th>
+                      </tr>
+                      </thead>
+                    </table>
+                    <div class="jtbl_wrap">
+                      <table class="table">
+                        <colgroup>
+                          <col style="width: 150px;">
+                          <col style="width: 150px;">
+                          <col style="width: 158px;">
+                        </colgroup>
+                        <tbody>
+                        <ng-template ngFor let-group="$implicit" [ngForOf]="pcList" let-pc>
+                        <tr>
+                          <td>{{pc.hostname}}</td>
+                          <td>{{pc.ip_address}}</td>
+                          <td>{{pc.access_ip}}</td>
+                        </tr>
+                        </ng-template>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn_wrap modal-footer clear">
+      <div class="jfr">
+        <button class="btn btn_closed" type="button" (click)="close()">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>

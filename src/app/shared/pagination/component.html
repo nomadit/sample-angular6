@@ -1,0 +1,19 @@
+<div class="text-center">
+  <ul *ngIf="pages && pages.length" class="pagination">
+    <li [ngClass]="{disabled:page.pageNum === 1}">
+      <a (click)="movePage(1)"><<</a>
+    </li>
+    <li [ngClass]="{disabled:page.pageNum === 1}">
+      <a (click)="movePage(page.pageNum - 1)"><</a>
+    </li>
+    <li *ngFor="let pageNum of pages" [ngClass]="{active:page.pageNum === pageNum}">
+      <a (click)="movePage(pageNum)">{{pageNum}}</a>
+    </li>
+    <li [ngClass]="{disabled:page.pageNum === lastPageNum}">
+      <a (click)="movePage(page.pageNum + 1)">></a>
+    </li>
+    <li [ngClass]="{disabled:page.pageNum === lastPageNum}">
+      <a (click)="movePage(lastPageNum)">>></a>
+    </li>
+  </ul>
+</div>

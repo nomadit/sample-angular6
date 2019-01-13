@@ -1,0 +1,39 @@
+<div class="layer_pc memo" [ngClass]="{ 'min_err' : type=='MINER_ERROR' }">
+  <h1 class="modal-header">[{{ factoryName }}] {{ pc.hostname }}
+    <div class="jsetting_ly">
+      <a class="jico jico_setting" (click)="doToggleOpenServiceNav()"></a>
+      <ul class="setting_nav" [ngClass]="{ 'dispBlock' : isOpenServiceNav }">
+        <li><a (click)="startMiner()">마이너 시작</a></li>
+        <li><a (click)="stopMiner()">마이너 중지</a></li>
+      </ul>
+    </div>
+  </h1>
+  <div class="top_control button_wrapper">
+    <a [routerLink]="['/miner-manager/macAddr', pc.mac_address]"
+       [queryParams]="{ factoryName: factoryName,  minerName: pc.hostname }" target="_blank">
+      <button class="btn btn-mine" type="button">장비 오버</button>
+    </a>
+    <div *ngIf="user">{{ user?.name }}({{ user?.login_id }})</div>
+  </div>
+  <div class="cont_wrap modal-body">
+    <div class="tabs-container">
+      <ul class="nav nav-tabs">
+        <li [ngClass]="{'active': type=='INFO'}"><a (click)="changeType('INFO')">해시값 상세</a></li>
+        <li [ngClass]="{'active': type=='MINER_ERROR'}"><a (click)="changeType('MINER_ERROR')">마이너 에러</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active">
+          <div class="panel-body">
+            <pc-info *ngIf="type === 'INFO'" [pcModel]="pc" [minerList]="minerList"></pc-info>
+            <miner-error *ngIf="type === 'MINER_ERROR'" [minerList]="minerList"></miner-error>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="btn_wrap modal-footer clear">
+    <div class="jfr">
+      <button class="btn btn_closed" type="button" (click)="close()">닫기</button>
+    </div>
+  </div>
+</div>

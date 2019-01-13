@@ -1,0 +1,54 @@
+<div class="content_summation_layer">
+  <table class="table">
+    <colgroup>
+      <col style="width: 160px;">
+      <col style="width: 300px;">
+      <col style="width: 300px;">
+      <col style="width: 300px;">
+    </colgroup>
+    <thead class="summation_header">
+    <tr>
+      <th></th>
+      <th>아직 이체되지 않은 코인</th>
+      <th>이체 완료된 코인</th>
+      <th>적용 환율<span class="jtxt_s">업비트 기준</span></th>
+    </tr>
+    </thead>
+    <tbody class="summation_body">
+    <ng-template ngFor let-group="$implicit" [ngForOf]="coinList" let-coin>
+      <tr *ngIf="coinSummationMap.has(coin);">
+        <td class="summation_coin_title" *ngIf="concurrencyInfo[coin]">
+          <i><img alt="image" class="summation_coin_img" [src]="concurrencyInfo[coin].img_path"></i>
+          <span class="summation_coin_text">
+          <span style="font-size: 15px;font-weight: bold">{{ coin }}</span>
+          {{ concurrencyInfo[coin].name.ko }}
+        </span>
+        </td>
+        <td *ngIf="error === 'getWalletBalance'; then GET_WALLET_BALANCE_ERROR else SHOW_SUMMARY"></td>
+        <ng-template #GET_WALLET_BALANCE_ERROR>
+          <td colspan="3">
+            해당 코인의 채굴량 정보를 일시적으로 불러올 수 없습니다. 잠시 후 다시 시도해주세요. (사유: 풀장에러)
+          </td>
+        </ng-template>
+        <ng-template #SHOW_SUMMARY>
+          <td>
+            <span>{{ getFixedNum(coinSummationMap.get(coin).balance) }} {{ coin }}</span>
+            <span class="coin_exchage_rate">( = {{ coinSummationMap.get(coin).balanceKrw | number }} 원)</span>
+          </td>
+          <td>
+            <span>{{ getFixedNum(coinSummationMap.get(coin).payouts) }} {{ coin }}</span>
+            <span class="coin_exchage_rate">( = {{ coinSummationMap.get(coin).payoutsKrw | number }} 원)</span>
+          </td>
+          <td>
+            <span>1 {{ coin }}: {{coinSummationMap.get(coin).exchangeRate | number }} 원</span>
+          </td>
+        </ng-template>
+      </tr>
+    </ng-template>
+    </tbody>
+  </table>
+  <div class="krw_text">
+    <p>각 항목의 원화 표시금액은 열람 시점의 업비트 시세를 곱한 값으로 확정된 수익금이 아닙니다.</p>
+    <p class="warning_txt" *ngIf="error === 'getUpbitExchangeRate'">업비트 환율을 가져오는데 문제가 발생하였습니다.</p>
+  </div>
+</div>

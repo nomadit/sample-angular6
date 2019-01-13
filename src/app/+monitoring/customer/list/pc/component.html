@@ -1,0 +1,54 @@
+<table class="table border-top">
+  <div *ngIf="userRole === 'WHOLESALE'; then WHOLESALE_COL_GROUP else RETAIL_COL_GROUP"></div>
+  <ng-template #WHOLESALE_COL_GROUP>
+    <colgroup>
+      <col style="width: 45px;">
+      <col style="width: 170px;">
+      <col style="width: 170px;">
+      <col style="width: 110px;">
+      <col style="width: 110px;">
+      <col style="width: 110px;">
+      <col style="width: 110px;">
+      <col style="width: 373px;">
+    </colgroup>
+  </ng-template>
+  <ng-template #RETAIL_COL_GROUP>
+    <colgroup>
+      <col style="width: 45px;">
+      <col style="width: 170px;">
+      <col style="width: 110px;">
+      <col style="width: 110px;">
+      <col style="width: 110px;">
+      <col style="width: 110px;">
+      <col style="width: 373px;">
+    </colgroup>
+  </ng-template>
+  <tbody>
+  <ng-template ngFor let-group="$implicit" [ngForOf]="minerList" let-item>
+    <tr [statusClass]="{type:'tr', status: item.status}" [checkedHighLight]="{ checkedIndex: selectedList.indexOf(item.id), status: item.status }">
+      <td class="al_center">
+        <div (click)="updateCheckBox(item.id, $event)" [ngClass]="{'checked':selectedList.indexOf(item.id) >= 0}"
+             class="icheckbox_square-black" style="position: relative;">
+          <input checked="" class="i-checks" names="row" style="position: absolute; opacity: 0;" type="checkbox">
+          <ins class="iCheck-helper cust-checkbox"></ins>
+        </div>
+      </td>
+      <td>
+        <table (click)="openPcPopup(item)" class="cust-inner-table">
+          <tr>
+            <a class="pc_list_name" [statusClass]="{type:'td', status: item.status}">
+              {{ pcMap.get(item.pc_id)?.hostname }}
+            </a>
+          </tr>
+        </table>
+      </td>
+      <td [hidden]="userRole === 'RETAIL'">{{ userMap.get(item.user_id)?.name}}</td>
+      <td>{{ factoryMap.get(item.factory_id)?.name }}</td>
+      <td [innerHtml]="item.coinStr"></td>
+      <td> {{ item.ratioStr }} </td>
+      <td [innerHtml]="minerStatMap.get(item.id) | hashSum: isPreventedSecondCoin"></td>
+      <td> {{ item.status | displayMinerStatus }}</td>
+    </tr>
+  </ng-template>
+  </tbody>
+</table>

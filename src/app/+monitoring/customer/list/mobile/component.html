@@ -1,0 +1,142 @@
+<table class="table border-top">
+  <colgroup>
+    <col style="width:36px" />
+    <col style="width:120px" />
+    <col style="width: 80px" />
+    <col style="width:70px;padding-left: 3px" />
+    <col style="" />
+  </colgroup>
+  <thead>
+  <tr>
+    <th></th>
+    <th>PC이름</th>
+    <th>채굴파워</th>
+    <th>코인</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody class="list_body">
+  <ng-template ngFor let-group="$implicit" [ngForOf]="pcList" let-item>
+    <tr [ngClass]="{'imp': checkedList.indexOf(item.id) >= 0 || displayDetailPCList.indexOf(item.id) >= 0}">
+      <!--CheckBox-->
+      <td class="al_center">
+        <div (click)="updateChecked(item.id, $event)" [ngClass]="{'checked':checkedList.indexOf(item.id) >= 0}"
+             class="icheckbox_square-black" style="position: relative;">
+          <input type="checkbox"
+                 class="i-checks"
+                 names="row"
+                 checked
+                 style="position: absolute; opacity: 0;">
+          <ins class="iCheck-helper cust-checkbox"></ins>
+        </div>
+      </td>
+      <td>
+        <span class="err" [hidden]="!checkMinerInErrorStatus(item.id)">
+          <i class="fa fa-exclamation-circle"></i>
+        </span>
+        <span class="pc_list_name" [ngClass]="{'warning_txt': checkMinerInErrorStatus(item.id)}">
+          {{ item.hostname }}
+        </span>
+      </td>
+      <td>
+        <span *ngFor="let miner of pcIdNMinersMap.get(item.id)">
+          <span [innerHtml]="minerStatMap.get(miner.id) | hashSum"></span>
+        </span>
+      </td>
+      <td>
+          <span *ngFor="let miner of pcIdNMinersMap.get(item.id)" [innerHtml]="minerStatMap.get(miner.id)">
+          </span>
+      </td>
+      <td class="al_center" (click)="showPCData(item.id, $event)">
+        <button type="button" class="btn_open" [ngClass]="{'on': displayDetailPCList.indexOf(item.id) >= 0}"></button>
+      </td>
+    </tr>
+    <tr>
+      <td class="tb_info" colspan="5">
+        <div class="info_table moni" [ngClass]="{'on': displayDetailPCList.indexOf(item.id) >= 0}">
+          <table>
+            <colgroup>
+              <col style="width:40%" />
+              <col style="width:60%" />
+            </colgroup>
+            <tbody>
+            <tr>
+              <th scope="row">소유주</th>
+              <td>
+                <div *ngFor="let miner of pcIdNMinersMap.get(item.id)">
+                  {{ getUserName(miner.user_id) }}
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">위치</th>
+              <td>
+                <div *ngFor="let factory of factoryList">
+                  {{ item.factory_id == factory.id ? factory.name : "" }}
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">총 채굴파워</th>
+              <td>
+                <span *ngFor="let miner of pcIdNMinersMap.get(item.id)">
+                  {{ minerStatMap.get(miner.id) | hashSum }}
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row" class="mcp">마이너별 채굴파워</th>
+              <td class="mcp">
+                <span *ngFor="let miner of pcIdNMinersMap.get(item.id)">
+                 {{ minerStatMap.get(miner.id) | gpusHashString }}
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">재부팅</th>
+              <td>
+                <table class="cust-inner-table">
+                  <tr>
+                    <div *ngIf="pcRebootCountMap && pcRebootCountMap.has(item.id); then VALUE_EXIST else VALUE_EMPTY"></div>
+                    <td>
+                      <ng-template #VALUE_EXIST>
+                        <span [ngClass]="{'warning_txt': pcRebootCountMap.get(item.id) >= 5}">{{ pcRebootCountMap.get(item.id) }}</span>
+                      </ng-template>
+                      <ng-template #VALUE_EMPTY>0</ng-template>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">채굴기 관리</th>
+              <td *ngIf="role === 'FACTORY'">
+                <div class="ch_wrap">
+                  <ng-container *ngIf="item.status == 'RUN' || item.status == 'STOP'">
+                    <button *ngIf="item.status == 'STOP'"
+                            (click)="changeStatus(item.id, 'RUN')"
+                            type="button" class="btn_pc_run"></button>
+                  </ng-container>
+                  <ng-container *ngIf="item.status != 'REBOOT'">
+                    <button type="button" class="btn_pc_reboot on" (click)="doReboot(item.id)"></button>
+                  </ng-container>
+                  <button *ngIf="minerPlugMap.has(item.id)" type="button" class="btn_iot_reboot" (click)="doRebootPlug(item.id)"></button>
+                  <button *ngIf="item.status != 'RUN'" type="button" class="btn_pc_delete" (click)="doDeletePC(item.id)"></button>
+                </div>
+              </td>
+              <td *ngIf="role === 'WHOLESALE' || role === 'RETAIL'">
+                <div class="ch_wrap">
+                  <button type="button" class="btn_wallet on" (click)="openChangeWallet(item)"></button>
+                  <button type="button" class="btn_coin on" (click)="openChangeCoin(item)"></button>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+  </tbody>
+</table>
+

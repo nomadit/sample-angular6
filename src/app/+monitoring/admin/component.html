@@ -1,0 +1,97 @@
+<!--monitoring-wrapper-content-->
+<div class="wrapper-content">
+  <div class="admin_wrap">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-content">
+            <div class="content-header">
+              <app-monitoring-header></app-monitoring-header>
+              <div class="top_line"></div>
+              <div class="top_select admin" fixedHeader>
+                <span class="rdo">
+                  <div [ngClass]="{'checked': selectedRadio === 'factory'}" class="iradio_square-black" (click)="selectRadio('factory')"
+                       style="position: relative;">
+                    <input id="rdo01" type="radio" class="i-checks" style="position: absolute; opacity: 0;">
+                    <ins class="iCheck-helper radio_button">
+                    </ins>
+                  </div>
+                  <label for="rdo01">공장별 요약정보 보기</label>
+                </span>
+                <span class="rdo">
+                  <div [ngClass]="{'checked': selectedRadio === 'wholesale'}" class="iradio_square-black" (click)="selectRadio('wholesale')"
+                       style="position: relative;">
+                    <input id="rdo02" type="radio" class="i-checks" style="position: absolute; opacity: 0;">
+                    <ins class="iCheck-helper radio_button">
+                    </ins>
+                  </div>
+                  <label for="rdo02">사업자별 요약정보 보기</label>
+                </span>
+                <span class="rdo">
+                  <div [ngClass]="{'checked': selectedRadio === 'retail'}" class="iradio_square-black" (click)="selectRadio('retail')"
+                       style="position: relative;">
+                    <input id="rdo03" type="radio" class="i-checks" style="position: absolute; opacity: 0;">
+                    <ins class="iCheck-helper radio_button">
+                    </ins>
+                  </div>
+                  <label for="rdo03">구매자별 요약정보 보기</label>
+                </span>
+              </div>
+              <div class="top_line"></div>
+            </div>
+            <div class="content-body">
+              <table class="table border-top jtable">
+                <colgroup>
+                  <col style="width: 180px;">
+                  <col style="width: 110px;">
+                  <col style="width: 110px;">
+                  <col style="width: 110px;">
+                  <col style="width: 110px;">
+                  <col style="width: 578px;">
+                </colgroup>
+                <thead>
+                <tr>
+                  <th>{{ getColumnByMenu() }}</th>
+                  <th>전체 채굴기</th>
+                  <th>정상 채굴기</th>
+                  <th>속도저하</th>
+                  <th>온도상승</th>
+                  <th>장비멈춤</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-template ngFor let-group="$implicit" [ngForOf]="list" let-item>
+                <tr>
+                  <td> <a class="pc_list_name clr_blue" (click)="goUrl(item)"> {{item.name}}</a> </td>
+                  <td>
+                    {{ item.allCount }}
+                  </td>
+                  <td>
+                    {{ item.normalCount }}
+                  </td>
+                  <td>
+                    {{ item.errorPerformCount }}
+                  </td>
+                  <td>
+                    {{ item.errorTempCount }}
+                  </td>
+                  <td>
+                    {{ item.stopCount }}
+                  </td>
+                </tr>
+                </ng-template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<a-messagebox ask="OK-Cancel" #AskModal name=''-->
+<!--(okEvent)="doReboot()">-->
+<!--</a-messagebox>-->
+<!--<a-messagebox ask="OK" #ConfirmModal name='' (okEvent)="clickOKConfirm($event)">-->
+<!--</a-messagebox>-->

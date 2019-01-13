@@ -1,0 +1,168 @@
+<div class="layer_pc jly_conin" *ngIf="view.miningType == 'single'">
+  <h1 class="modal-header">코인 변경하기</h1>
+  <p class="modal-header_jtxt">변경할 코인타입과 코인을 이체받을 지갑을 선택해주세요.</p>
+  <div class="cont_wrap modal-body">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-content al_left">
+            <form class="form-horizontal" method="get" novalidate="">
+              <div class="form-group">
+                <select [(ngModel)]="view.selectedCoin" #coin (change)="selectCoin(coin.value)" name="selectedCoin"
+                        class="select form-control m-b" style="width:100%">
+                  <option [value]="0">코인을 선택해 주세요</option>
+                  <option *ngFor="let coin of view.coinList" [value]="coin">{{ coin }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <select [(ngModel)]="form.walletID" #selectedWallet name="selectedWallet"
+                        (change)="selectWallet(selectedWallet.value)" class="select form-control m-b"
+                        style="width:100%">
+                  <option [value]="0">지갑을 선택해 주세요</option>
+                  <option *ngFor="let wallet of view.walletMap.get(view.selectedCoin)" [value]="wallet.id">{{
+                    wallet.name }}
+                  </option>
+                </select>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn_wrap modal-footer clear">
+      <div class="jfl jtxt_s">
+        <p *ngIf="view.walletMap.has(view.selectedCoin) == false">*선택하신 코인을 이체할 지갑이 없습니다.<br>먼저 지갑을 생성하신 후 코인을 변경해 주세요.
+        </p>
+      </div>
+      <div class="jfr">
+        <button class="btn btn-dark" type="button" (click)="confirm()">변경</button>
+        <button class="btn btn_closed" type="button" (click)="close()">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="layer_pc jly_conin" *ngIf="view.miningType == 'needCheck'">
+  <h1 class="modal-header">코인 변경하기</h1>
+  <p class="modal-header_jtxt">선택한 채굴기는 동시에 2가지의 코인을 채굴할 수 있는 상태(듀얼마이닝)입니다. 듀얼마이닝으로 세팅하시겠습니까?</p>
+  <div class="cont_wrap modal-body">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-content al_left">
+            <form class="form-horizontal" method="get" novalidate="">
+              <div class="form-group">
+                <span class="rdo">
+                  <div [ngClass]="{'checked': view.selectedMiningType === 'dual'}" (click)="selectMiningType('dual')"
+                       class="iradio_square-black" style="position: relative;">
+                    <input class="i-checks" id="rdo-dual-mining"
+                           style="position: absolute; opacity: 0;" type="radio">
+                    <ins class="iCheck-helper radio_button">
+                    </ins>
+                  </div>
+                  <label for="rdo-dual-mining">예, 듀얼마이닝으로 세팅하겠습니다.</label>
+                </span>
+              </div>
+              <div class="form-group">
+                <span class="rdo">
+                  <div [ngClass]="{'checked': view.selectedMiningType === 'single'}"
+                       (click)="selectMiningType('single')"
+                       class="iradio_square-black" style="position: relative;">
+                    <input class="i-checks" id="rdo-dual-single"
+                           style="position: absolute; opacity: 0;" type="radio">
+                    <ins class="iCheck-helper radio_button">
+                    </ins>
+                  </div>
+                  <label for="rdo-dual-single">아니오, 코인 한 종류만 채굴하겠습니다.</label>
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn_wrap modal-footer clear">
+      <div class="jfr">
+        <button class="btn btn-dark" type="button" (click)="next()">다음</button>
+        <button class="btn btn_closed" type="button" (click)="close()">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="layer_pc jly_conin jly_conin2" *ngIf="view.miningType == 'dual'">
+  <h1 class="modal-header">코인 변경하기</h1>
+  <p class="modal-header_jtxt">2가지의 코인을 선택할 수 있으며, 각 코인별 채굴에 사용할 <br>
+    채굴기의 해시파워배분율을 입력해 주세요.</p>
+  <div class="cont_wrap modal-body">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-content al_left">
+            <form class="form-horizontal" method="get" novalidate="">
+              <table class="table">
+                <colgroup>
+                  <col style="width: 280px;">
+                  <col style="width: 280px;">
+                </colgroup>
+                <tbody>
+                <tr>
+                  <td>
+                    <strong>코인1</strong>
+                    <select [(ngModel)]="view.selectedCoin" (ngModelChange)="selectCoin($event)" name="mainCoin"
+                            class="select form-control m-b">
+                      <option [value]="0">코인을 선택해 주세요</option>
+                      <option *ngFor="let coin of view.coinList" [value]="coin">{{ coin }}</option>
+                    </select>
+                    <select [(ngModel)]="form.walletID" name="mainWallet"
+                            (ngModelChange)="selectWallet($event)" class="select form-control m-b">
+                      <option [value]="0">지갑을 선택해 주세요</option>
+                      <option *ngFor="let wallet of view.walletMap.get(view.selectedCoin)" [value]="wallet.id">{{
+                        wallet.name }}
+                      </option>
+                    </select>
+                    <div class="jinp_area">
+                      <input type="text" class="form-control" readonly="readonly" [(ngModel)]="100 - form.ratio"
+                             name="mainRatio">
+                      <span>%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <strong>코인2</strong>
+                    <select [(ngModel)]="view.selectedDualCoin" (ngModelChange)="selectDualCoin($event)" name="dualCoin"
+                            class="select form-control m-b">
+                      <option [value]="0">코인을 선택해 주세요</option>
+                      <option *ngFor="let coin of view.dualCoinList" [value]="coin">{{ coin }}</option>
+                    </select>
+                    <select [(ngModel)]="form.dualWalletID" name="dualWallet"
+                            (ngModelChange)="selectDualWallet($event)" class="select form-control m-b">
+                      <option [value]="0">지갑을 선택해 주세요</option>
+                      <option *ngFor="let wallet of view.dualWalletMap.get(view.selectedDualCoin)" [value]="wallet.id">
+                        {{ wallet.name }}
+                      </option>
+                    </select>
+                    <div class="jinp_area">
+                      <input type="number" class="form-control" [(ngModel)]="form.ratio" name="dualRatio">
+                      <span>%</span>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn_wrap modal-footer clear">
+      <div class="jfl jtxt_s">
+        <p *ngIf="isEmptyMainCoinWalletList();">
+          코인1: *선택하신 코인을 이체할 지갑이 없습니다.<br>먼저 지갑을 생성하신 후 코인을 변경해 주세요. </p>
+        <p *ngIf="isEmptySecondCoinWalletList();">
+          코인2: *선택하신 코인을 이체할 지갑이 없습니다.<br>먼저 지갑을 생성하신 후 코인을 변경해 주세요. </p>
+      </div>
+      <div class="jfr">
+        <button class="btn btn-dark" type="button" (click)="confirm()">변경</button>
+        <button class="btn btn_closed" type="button" (click)="close()">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>

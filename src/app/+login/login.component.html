@@ -1,0 +1,32 @@
+<div class="pc">
+  <div class="login_wrap">
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+      <div>
+        <div>
+          <h1 class="logo"><span class="hide">Sample</span></h1>
+        </div>
+        <form class="m-t" name="form">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="아이디" name="login_id" [(ngModel)]="model.login_id">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" placeholder="비밀번호" name="password" [(ngModel)]="model.password">
+          </div>
+          <button class="btn btn-mine block full-width m-b btn_login" type="submit" (click)="login()">로그인</button>
+          <p class="bot_info">{{ errorMsg }}</p>
+          <div class="login_desc">
+            <p class="jtxt_info">아이디와 비밀번호가 기억나지 않으시면 <a href="mailto:jk@bkloud.co.kr">jk@bkloud.co.kr</a> 또는<br>
+              <a href="http://pf.kakao.com/_zmxjSC/chat" target="_blank">카카오플러스친구@마인트릭스</a>를 통해 문의해주세요.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- 수정 6.04_v1 -->
+  <footer class="footer login_foot">
+    <div class="container">
+      <p class="text-muted"><strong>Copyright Sample Company © 2018</strong></p>
+    </div>
+  </footer>
+  <!-- //수정 6.04_v1 -->
+</div>

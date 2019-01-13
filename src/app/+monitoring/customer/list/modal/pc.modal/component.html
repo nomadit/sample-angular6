@@ -1,0 +1,68 @@
+<div class="layer_pc">
+  <h1 class="modal-header">[{{ factoryName }}] {{ pcModel.hostname }}</h1>
+  <div class="cont_wrap modal-body">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-content al_left">
+            <form class="form-horizontal" method="get" novalidate="">
+              <div *ngIf="role == 'ADMIN' || role == 'FACTORY'">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">PC ID:</label>
+                  <div class="col-sm-8 control-content">
+                    {{ pcModel.id }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">VGA 계열:</label>
+                  <div class="col-sm-8 control-content pc_modal_miner_power">
+                    {{ getGpuType(pcModel) }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">PC 맥어드레스:</label>
+                  <div class="col-sm-8 control-content">
+                    {{ pcModel.mac_address }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">PC ACCESS IP:</label>
+                  <div class="col-sm-8 control-content">
+                    {{ pcModel.access_ip }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">PC 내부 IP:</label>
+                  <div class="col-sm-8 control-content">
+                    {{ pcModel.ip_address }}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">전체 해시값:</label>
+                <div class="col-sm-8 control-content" *ngFor="let item of minerList"
+                     [innerHtml]="minerIDStatMap.get(item.id) | hashSum">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">장비별 해시값:</label>
+                <div class="col-sm-8 control-content pc_modal_miner_power">
+                  <ng-template ngFor let-group="$implicit" [ngForOf]="minerList" let-item>
+                    <span *ngFor="let stat of minerIDDualStatMap.get(item.id)?.first">{{ stat.content | contentParseToHashRate }} / </span>
+                    <span *ngFor="let stat of minerIDDualStatMap.get(item.id)?.second;let inx=index"><br *ngIf="inx==0">
+                      {{ stat.content | contentParseToHashRate }} / </span>
+                  </ng-template>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn_wrap modal-footer clear">
+      <div class="jfr">
+        <button class="btn btn_closed" type="button" (click)="close()">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
